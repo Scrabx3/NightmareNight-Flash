@@ -8,24 +8,27 @@ class FrenzyMeter extends MovieClip
 	var minWidth:Number;
 	var maxWidth:Number;
 
-	var timeline:TimelineLite;
+	var MeterTimeline:TimelineLite;
 
-	private var _hidden: Boolean;
-	private var _paused: Boolean;
-	private var _percent:Number;
+	var _hidden: Boolean;
+	var _paused: Boolean;
+	var _percent:Number;
 
 	public function FrenzyMeter()
 	{
 		super();
-		meterDuration = 0.5;
 
-		timeline = new TimelineLite({_paused:true});
+		meterDuration = 0.01;
+		_paused = false;
+		_hidden = false;
+
+		MeterTimeline = new TimelineLite({_paused:true});
 		maxWidth = MeterContainer.Mask._x;
 		minWidth = MeterContainer.Mask._x - MeterContainer.Mask._width;
 		_percent = (maxWidth - minWidth) / 100;
 	}
 
-	public function onLoad(): Void
+	public function onLoad()
 	{
 		hide(true);
 	}
@@ -45,7 +48,7 @@ class FrenzyMeter extends MovieClip
 			return;
 
 		_hidden = true;
-		force ? gotoAndPlay("fadeout") : gotoAndStop("hidden");
+		force ? gotoAndStop("hide") : gotoAndPlay("fadeout");
 	}
 
 	public function show(): Void
@@ -53,6 +56,7 @@ class FrenzyMeter extends MovieClip
 		if (!_hidden)
 			return;
 
+		_hidden = false;
 		gotoAndStop("show");
 	}
 
@@ -62,7 +66,7 @@ class FrenzyMeter extends MovieClip
 			return;
 
 		_paused = true;
-		timeline.stop();
+		MeterTimeline.stop();
 	}
 
 	public function resumeMeter(): Void
@@ -71,34 +75,28 @@ class FrenzyMeter extends MovieClip
 			return;
 
 		_paused = false;
-		timeline.resume();
+		MeterTimeline.resume();
 	}
 
 	public function setMeterPercent(percent :Number):Void
 	{
-		if (_paused)
-			return;
-
-		timeline.clear();
-		percent = Math.min(0, Math.max(percent, 100));
+		MeterTimeline.clear();
+		percent = Math.min(100, Math.max(percent, 0));
 		MeterContainer.Mask._x = minWidth + (_percent * percent);
 	}
 
 	public function updateMeterPercent(percent: Number):Void
 	{
-		if (_paused)
-			return;
+		percent = Math.min(100, Math.max(percent, 0));
 
-		percent = Math.min(0, Math.max(percent, 100));
-
-		if (!timeline.isActive())
+		if (!MeterTimeline.isActive())
 		{
-			timeline.clear();
-			timeline.progress(0);
-			timeline.restart();
+			MeterTimeline.clear();
+			MeterTimeline.progress(0);
+			MeterTimeline.restart();
 		}
-		timeline.to(MeterContainer.Mask, 1, {_x: minWidth + (_percent * percent)}, timeline.time() + meterDuration);
-		timeline.play();
+		MeterTimeline.to(MeterContainer.Mask, 1, {_x: minWidth + (_percent * percent)}, MeterTimeline.time() + meterDuration);
+		MeterTimeline.play();
 	}
 
 }

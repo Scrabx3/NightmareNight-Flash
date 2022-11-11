@@ -1,26 +1,40 @@
 ﻿import com.greensock.TimelineLite;
 import com.greensock.easing.*;
+import skse;
 
 import FrenzyMeter;
 
 class LegacyMeter extends FrenzyMeter {
-	
+
 	public function LegacyMeter() {
 		super();
 	}
 
+	public function forceMeterPercent(percent :Number):Void
+	{
+		MeterTimeline.clear();
+		percent = Math.min(100, Math.max(percent, 0));
+		MeterContainer.Mask._x = minWidth + (_percent * percent);
+	}
+
 	public function updateMeterDuration(duration: Number): Void
 	{
-		if (_paused)
-			_paused = false;
+		forceMeterPercent(100);
 
-		if (!timeline.isActive())
+		if (!MeterTimeline.isActive())
 		{
-			timeline.clear();
-			timeline.progress(0);
-			timeline.restart();
+			MeterTimeline.clear();
+			MeterTimeline.progress(0);
+			MeterTimeline.restart();
 		}
-		timeline.to(MeterContainer.Mask, duration, {_x: minWidth + (_percent * 100)});
-		timeline.play();
+		
+		MeterTimeline.to(MeterContainer.Mask, duration, {_x: minWidth, onComplete: onComplete, onCompleteParams:[this]}, MeterTimeline.time() + meterDuration);
+		MeterTimeline.play();
 	}
+
+	public function onComplete(a_this: MovieClip)
+	{
+		skse.SendModEvent("NightmareNightFrenzyEnd");
+	}
+
 }
