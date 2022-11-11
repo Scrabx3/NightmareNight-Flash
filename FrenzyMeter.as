@@ -17,7 +17,7 @@ class FrenzyMeter extends MovieClip
 	public function FrenzyMeter()
 	{
 		super();
-		meterDuration = 0.01;
+		meterDuration = 0.5;
 
 		timeline = new TimelineLite({_paused:true});
 		maxWidth = MeterContainer.Mask._x;
@@ -58,27 +58,33 @@ class FrenzyMeter extends MovieClip
 
 	public function pauseMeter(): Void
 	{
+		if (_paused)
+			return;
+
+		_paused = true;
 		timeline.stop();
 	}
 
 	public function resumeMeter(): Void
 	{
+		if (!_paused)
+			return;
+
+		_paused = false;
 		timeline.resume();
 	}
 
-	public function setMeterPercent(percent :Number, force: Boolean):Void
+	public function setMeterPercent(percent :Number):Void
 	{
-		if (!force) {
-			updateMeterPercent(percent);
-		} else {
-			_paused = false;
-			timeline.clear();
-			percent = Math.min(0, Math.max(percent, 100));
-			MeterContainer.Mask._x = minWidth + (_percent * percent);
-		}
+		if (_paused)
+			return;
+
+		timeline.clear();
+		percent = Math.min(0, Math.max(percent, 100));
+		MeterContainer.Mask._x = minWidth + (_percent * percent);
 	}
 
-	private function updateMeterPercent(percent: Number):Void
+	public function updateMeterPercent(percent: Number):Void
 	{
 		if (_paused)
 			return;
