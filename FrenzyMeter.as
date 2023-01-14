@@ -1,4 +1,5 @@
-﻿import com.greensock.TimelineLite;
+﻿
+import com.greensock.*;
 import com.greensock.easing.*;
 
 class FrenzyMeter extends MovieClip
@@ -10,7 +11,6 @@ class FrenzyMeter extends MovieClip
 
 	var MeterTimeline:TimelineLite;
 
-	var _hidden: Boolean;
 	var _paused: Boolean;
 	var _percent:Number;
 
@@ -20,7 +20,6 @@ class FrenzyMeter extends MovieClip
 
 		meterDuration = 0.01;
 		_paused = false;
-		_hidden = false;
 
 		MeterTimeline = new TimelineLite({_paused:true});
 		maxWidth = MeterContainer.Mask._x;
@@ -44,20 +43,16 @@ class FrenzyMeter extends MovieClip
 
 	public function hide(force: Boolean): Void
 	{
-		if (_hidden)
+		if (force) {
+			_alpha = 0;
 			return;
-
-		_hidden = true;
-		force ? gotoAndStop("hide") : gotoAndPlay("fadeout");
+		}
+		TweenLite.to(this, 0.9, { _alpha: 0, ease: Quint.easeOut });
 	}
 
 	public function show(): Void
 	{
-		if (!_hidden)
-			return;
-
-		_hidden = false;
-		gotoAndStop("show");
+		TweenLite.to(this, 0.6, { _alpha: 100, ease: Strong.easeIn });
 	}
 
 	public function pauseMeter(): Void

@@ -34,6 +34,7 @@ class LegacyMeter extends FrenzyMeter {
 
 	public function onComplete(a_this: MovieClip)
 	{
+		hide(false);
 		skse.SendModEvent("NightmareNightFrenzyEnd");
 	}
 
