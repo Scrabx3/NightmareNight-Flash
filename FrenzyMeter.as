@@ -1,8 +1,8 @@
-﻿
+﻿import skyui.widgets.WidgetBase;
 import com.greensock.*;
 import com.greensock.easing.*;
 
-class FrenzyMeter extends MovieClip
+class FrenzyMeter extends MovieClip // MovieClip | WidgetBase
 {
 	var MeterContainer:MovieClip;
 	var meterDuration:Number;
