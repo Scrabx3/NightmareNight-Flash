@@ -32,13 +32,30 @@ class FrenzyMeter extends MovieClip // MovieClip | WidgetBase
 		hide(true);
 	}
 
-	public function setLocation(xpos: Number, ypos: Number, rot: Number, xscale: Number, yscale: Number): Void
+	public function setLocation(xpos_prc: Number, ypos_prc: Number, rot: Number, xscale: Number, yscale: Number): Void
 	{
-		this._x = xpos;
-		this._y = ypos;
-		this._rotation = rot;
-		this._xscale = xscale;
-		this._yscale = yscale;
+		// var minXY: Object = {x: Stage.visibleRect.x + Stage.safeRect.x, y: Stage.visibleRect.y + Stage.safeRect.y};
+		var maxXY: Object = {x: Stage.visibleRect.x + Stage.visibleRect.width - Stage.safeRect.x, y: Stage.visibleRect.y + Stage.visibleRect.height - Stage.safeRect.y};
+		// this._parent.globalToLocal(minXY);
+		// this._parent.globalToLocal(maxXY);
+
+		//  (minXY.x, minXY.y) _____________ (maxXY.x, minXY.y)
+		//                    |             |
+		//                    |     THE     |
+		//                    |    STAGE    |
+		//  (minXY.x, maxXY.y)|_____________|(maxXY.x, maxXY.y)
+
+		var c: Object = {x: maxXY.x * xpos_prc, y: maxXY.y * ypos_prc};
+		this._parent.globalToLocal(c);
+		this._x = c.x;
+		this._y = c.y;
+
+		if (rot != undefined)
+			this._rotation = rot;
+		if (xscale != undefined)
+			this._xscale = xscale;
+		if (yscale != undefined)
+			this._yscale = yscale;
 	}
 
 	public function hide(force: Boolean): Void
