@@ -4,10 +4,17 @@ import skse;
 
 import FrenzyMeter;
 
-class LegacyMeter extends FrenzyMeter {
-
+class LegacyMeter extends FrenzyMeter 
+{
 	public function LegacyMeter() {
 		super();
+	}
+
+	public function onLoad()
+	{
+		super.onLoad();
+
+		setLocation(0.50, 0.96);
 	}
 
 	public function forceMeterPercent(percent :Number):Void

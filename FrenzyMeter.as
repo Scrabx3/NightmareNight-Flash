@@ -2,7 +2,7 @@
 import com.greensock.*;
 import com.greensock.easing.*;
 
-class FrenzyMeter extends MovieClip // MovieClip | WidgetBase
+class FrenzyMeter extends MovieClip
 {
 	var MeterContainer:MovieClip;
 	var meterDuration:Number;
@@ -32,9 +32,10 @@ class FrenzyMeter extends MovieClip // MovieClip | WidgetBase
 
 	public function onLoad()
 	{
-		hide(true);
+		// hide(true);
 
 		_global.gfxExtensions = true;
+		setLocation(0.70, 0.82);
 	}
 
 	public function setLocation(xpos_prc: Number, ypos_prc: Number, rot: Number, xscale: Number, yscale: Number): Void
